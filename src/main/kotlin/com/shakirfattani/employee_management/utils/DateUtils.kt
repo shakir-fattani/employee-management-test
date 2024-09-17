@@ -6,12 +6,13 @@ import java.time.ZoneOffset
 
 class DateUtils {
     companion object {
-        fun now(): LocalDateTime {
-            return LocalDateTime.now(ZoneOffset.UTC)
-        }
-        fun convertToLocalTime(dateTime: LocalDateTime, zoneId: ZoneId): LocalDateTime {
-            return dateTime.atZone(ZoneOffset.UTC)
-                .withZoneSameInstant(zoneId).toLocalDateTime()
-        }
+        fun now(): LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
+
+        fun changeTimeZone(dateTime: LocalDateTime, fromZoneId: ZoneId, toZoneId: ZoneId): LocalDateTime =
+            dateTime.atZone(fromZoneId)
+                .withZoneSameInstant(toZoneId).toLocalDateTime()
+
+        fun convertToLocalTime(dateTime: LocalDateTime, zoneId: ZoneId): LocalDateTime =
+            changeTimeZone(dateTime, ZoneOffset.UTC, zoneId)
     }
 }

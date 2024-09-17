@@ -9,6 +9,7 @@ import com.shakirfattani.employee_management.repositories.EmployeeRepository
 import com.shakirfattani.employee_management.repositories.TimeOffRequestRepository
 import com.shakirfattani.employee_management.utils.DateUtils
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 @Service
 @Transactional
@@ -47,7 +48,33 @@ class EmployeeService(private val employeeRepository: EmployeeRepository,
     )
   }
 
-  fun requestTimeOff(timeOffRequest: TimeOffRequest): TimeOffRequest {
+  fun getAllOffRequests(employeeId: UUID, timezone: String): List<TimeOffRequest> {
+    val zoneId = ZoneId.of(timezone)
+    getEmployeeById(employeeId) ?: throw Exception("employee not found")
+
+    return timeOffRequestRepository.findAllByEmployeeId(employeeId = employeeId).map{
+      it.copy(
+        startDate = DateUtils.convertToLocalTime(it.startDate, zoneId),
+        endDate = DateUtils.convertToLocalTime(it.endDate, zoneId),
+        createdAt = DateUtils.convertToLocalTime(it.createdAt!!, zoneId),
+        modifiedAt = DateUtils.convertToLocalTime(it.modifiedAt!!, zoneId)
+      )
+    }.toMutableList()
+  }
+
+  fun requestTimeOff(timeOffRequest: TimeOffRequest, currentTimeZone: String): TimeOffRequest {
+
+    val currentZoneId = ZoneId.of(currentTimeZone)
+    getEmployeeById(timeOffRequest.employeeId) ?: throw Exception("employee not found")
+    val type = requestTypeService.getTimeOffRequestTypeById(timeOffRequest.requestTypeId) ?: throw Exception("timeoff request type not found");
+
+    val startDate = DateUtils.changeTimeZone(timeOffRequest.startDate, currentZoneId, ZoneOffset.UTC)
+    val endDate = DateUtils.changeTimeZone(timeOffRequest.endDate, currentZoneId, ZoneOffset.UTC)
+
+    val timeOffRequests = timeOffRequestRepository.findAllByEmployeeId(timeOffRequest.employeeId)
+
+
+
 
     return timeOffRequest
   }

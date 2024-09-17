@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface TimeOffRequestRepository : JpaRepository<TimeOffRequest, UUID>
+interface TimeOffRequestRepository : JpaRepository<TimeOffRequest, UUID> {
+    fun findAllByEmployeeId(employeeId: UUID): List<TimeOffRequest>
+}
