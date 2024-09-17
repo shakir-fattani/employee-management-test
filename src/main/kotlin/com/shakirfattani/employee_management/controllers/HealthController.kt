@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 class HealthController {
 
 	@GetMapping("/health")
-	fun health(): String {
-		return "success"
-    }
+	fun health() = "success"
+
+	@GetMapping("/error")
+	fun error() = "something went wrong"
 }
