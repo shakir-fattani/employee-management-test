@@ -1,0 +1,21 @@
+@baseUrl=http://localhost:8080
+
+######
+# @name Health-Endpoint
+GET {{baseUrl}}/health
+
+######
+# @name Employee-Listing
+GET {{baseUrl}}/employees
+
+######
+# @name Employee-Listing
+POST {{baseUrl}}/employees
+Content-Type: application/json
+
+{
+  "name": "Shakir",
+  "position": "Staff Software Engineer - Backend",
+  "salary": 45000.0,
+  "email": "m.shakirfattani@gmail.com"
+}
