@@ -7,25 +7,28 @@ import java.time.ZoneOffset
 import java.util.*
 
 @Entity
-@Table(name = "employees")  // Use JPA annotations
-data class Employee(
+@Table(name = "time_off_request")  // Use JPA annotations
+data class TimeOffRequest(
 
     @Id
     @GeneratedValue
     @Column(columnDefinition = "BINARY(16)")
     val id: UUID = UUID.randomUUID(),
 
+    @Column(name = "request_type_id", columnDefinition = "BINARY(16)")
+    val requestTypeId: UUID,
+
+    @Column(name = "employee_id", columnDefinition = "BINARY(16)")
+    val employeeId: UUID,
+
     @Column(nullable = false)
     val name: String,
 
-    @Column(nullable = false, unique = true)
-    val email: String,
+    @Column(name = "start_date")
+    val startDate: LocalDateTime,
 
-    @Column(nullable = false)
-    val position: String,
-
-    @Column(nullable = false)
-    val salary: Float,
+    @Column(name = "end_date")
+    val endDate: LocalDateTime,
 
     @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime? = null,

@@ -10,7 +10,7 @@ import java.util.UUID
 @RequestMapping("/employees")
 class EmployeeController(private val employeeService: EmployeeService) {
   @GetMapping
-  fun getAllEmployees(): List<Employee> = employeeService.getAllEmployees()
+  fun getAllEmployees(@RequestParam timezone: String = "Asia/Dubai"): List<Employee> = employeeService.getAllEmployees(timezone)
 
   @GetMapping("/{id}")
   fun getEmployeeById(@PathVariable id: String): ResponseEntity<Employee> =
