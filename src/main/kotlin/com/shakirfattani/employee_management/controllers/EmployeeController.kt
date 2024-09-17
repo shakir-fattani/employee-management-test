@@ -2,6 +2,7 @@ package com.shakirfattani.employee_management.controllers
 
 import com.shakirfattani.employee_management.services.EmployeeService
 import com.shakirfattani.employee_management.models.Employee
+import com.shakirfattani.employee_management.models.TimeOffRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -24,4 +25,14 @@ class EmployeeController(private val employeeService: EmployeeService) {
   fun updateEmployee(@PathVariable id: String, @RequestBody updatedEmployee: Employee): ResponseEntity<Employee> =
       employeeService.updateEmployee(UUID.fromString(id), updatedEmployee)?.let { ResponseEntity.ok(it) }
           ?: ResponseEntity.notFound().build()
+
+  @PostMapping
+  fun requestTimeOff(@RequestBody timeOffRequest: TimeOffRequest): ResponseEntity<TimeOffRequest> {
+      return try {
+          val response = employeeService.requestTimeOff(timeOffRequest)
+          ResponseEntity.ok(response)
+      } catch (e: Exception) {
+          ResponseEntity.badRequest().build()
+      }
+  }
 }

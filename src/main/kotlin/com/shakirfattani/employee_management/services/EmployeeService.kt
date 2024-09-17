@@ -4,13 +4,17 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import com.shakirfattani.employee_management.models.Employee
+import com.shakirfattani.employee_management.models.TimeOffRequest
 import com.shakirfattani.employee_management.repositories.EmployeeRepository
+import com.shakirfattani.employee_management.repositories.TimeOffRequestRepository
 import com.shakirfattani.employee_management.utils.DateUtils
 import java.time.ZoneId
 
 @Service
 @Transactional
-class EmployeeService(private val employeeRepository: EmployeeRepository) {
+class EmployeeService(private val employeeRepository: EmployeeRepository,
+                      private val requestTypeService: TimeOffRequestTypeService,
+                      private val timeOffRequestRepository: TimeOffRequestRepository) {
 
   fun getAllEmployees(timezone: String): List<Employee> {
     val zoneId = ZoneId.of(timezone)
@@ -18,14 +22,15 @@ class EmployeeService(private val employeeRepository: EmployeeRepository) {
       it.createdAt = DateUtils.convertToLocalTime(it.createdAt!!, zoneId)
       it.modifiedAt = DateUtils.convertToLocalTime(it.modifiedAt!!, zoneId)
       it
-    }.toMutableList();
+    }.toMutableList()
   }
 
   fun getEmployeeById(id: UUID): Employee?  {
-    val employee = employeeRepository.findById(id).orElse(null)
-    employee?.createdAt = DateUtils.convertToLocalTime(employee.createdAt!!, ZoneId.of("UTC"))
-    employee?.modifiedAt = DateUtils.convertToLocalTime(employee.modifiedAt!!, ZoneId.of("UTC"))
-    return employee
+    return employeeRepository.findById(id).orElse(null)?.let {
+      it.modifiedAt = DateUtils.convertToLocalTime(it.modifiedAt!!, ZoneId.of("UTC"))
+      it.createdAt = DateUtils.convertToLocalTime(it.createdAt!!, ZoneId.of("UTC"))
+      it
+    }
   }
 
   fun createEmployee(employee: Employee): Employee = employeeRepository.save(employee)
@@ -40,5 +45,10 @@ class EmployeeService(private val employeeRepository: EmployeeRepository) {
         salary = updatedEmployee.salary,
       )
     )
+  }
+
+  fun requestTimeOff(timeOffRequest: TimeOffRequest): TimeOffRequest {
+
+    return timeOffRequest
   }
 }

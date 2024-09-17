@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface TimeOffRequestTypeRepository : JpaRepository<TimeOffRequestType, UUID> {
-}
+interface TimeOffRequestTypeRepository : JpaRepository<TimeOffRequestType, UUID>
