@@ -15,16 +15,17 @@ class TimeOffRequestTypeService(private val timeOffRequestTypeRepository: TimeOf
   fun getAllTimeOffRequestTypes(timezone: String): List<TimeOffRequestType> {
     val zoneId = ZoneId.of(timezone)
     return timeOffRequestTypeRepository.findAll().map {
-      it.createdAt = DateUtils.convertToLocalTime(it.createdAt!!, zoneId)
-      it.modifiedAt = DateUtils.convertToLocalTime(it.modifiedAt!!, zoneId)
+      it.createdAt = DateUtils.convertUTCToLocalTime(it.createdAt!!, zoneId)
+      it.modifiedAt = DateUtils.convertUTCToLocalTime(it.modifiedAt!!, zoneId)
       it
     }.toMutableList()
   }
 
-  fun getTimeOffRequestTypeById(id: UUID): TimeOffRequestType?  {
+  fun getTimeOffRequestTypeById(id: UUID, timezone: String): TimeOffRequestType?  {
+    val zoneId = ZoneId.of(timezone)
     return timeOffRequestTypeRepository.findById(id).orElse(null)?.let {
-      it.createdAt = DateUtils.convertToLocalTime(it.createdAt!!, ZoneId.of("UTC"))
-      it.modifiedAt = DateUtils.convertToLocalTime(it.modifiedAt!!, ZoneId.of("UTC"))
+      it.createdAt = DateUtils.convertUTCToLocalTime(it.createdAt!!, zoneId)
+      it.modifiedAt = DateUtils.convertUTCToLocalTime(it.modifiedAt!!, zoneId)
       it
     }
   }

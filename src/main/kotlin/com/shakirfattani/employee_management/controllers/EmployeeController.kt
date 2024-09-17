@@ -11,11 +11,11 @@ import java.util.UUID
 @RequestMapping("/employees")
 class EmployeeController(private val employeeService: EmployeeService) {
   @GetMapping
-  fun getAllEmployees(@RequestParam timezone: String = "Asia/Dubai"): List<Employee> = employeeService.getAllEmployees(timezone)
+  fun getAllEmployees(@RequestParam(required = false) timezone: String = "Asia/Dubai"): List<Employee> = employeeService.getAllEmployees(timezone)
 
   @GetMapping("/{id}")
-  fun getEmployeeById(@PathVariable id: String): ResponseEntity<Employee> =
-      employeeService.getEmployeeById(UUID.fromString(id))?.let { ResponseEntity.ok(it) }
+  fun getEmployeeById(@PathVariable id: String, @RequestParam(required = false) timezone: String = "Asia/Dubai"): ResponseEntity<Employee> =
+      employeeService.getEmployeeById(UUID.fromString(id), timezone)?.let { ResponseEntity.ok(it) }
           ?: ResponseEntity.notFound().build()
 
   @PostMapping
@@ -27,7 +27,7 @@ class EmployeeController(private val employeeService: EmployeeService) {
           ?: ResponseEntity.notFound().build()
 
   @PostMapping
-  fun requestTimeOff(@RequestBody timeOffRequest: TimeOffRequest): ResponseEntity<TimeOffRequest> {
+  fun requestTimeOff(@RequestBody timeOffRequest: TimeOffRequest, @RequestParam(required = false) timezone: String = "Asia/Dubai"): ResponseEntity<TimeOffRequest> {
       return try {
           val response = employeeService.requestTimeOff(timeOffRequest)
           ResponseEntity.ok(response)

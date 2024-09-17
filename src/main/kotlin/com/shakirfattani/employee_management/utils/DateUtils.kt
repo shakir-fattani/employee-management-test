@@ -12,7 +12,7 @@ class DateUtils {
             dateTime.atZone(fromZoneId)
                 .withZoneSameInstant(toZoneId).toLocalDateTime()
 
-        fun convertToLocalTime(dateTime: LocalDateTime, zoneId: ZoneId): LocalDateTime =
+        fun convertUTCToLocalTime(dateTime: LocalDateTime, zoneId: ZoneId): LocalDateTime =
             changeTimeZone(dateTime, ZoneOffset.UTC, zoneId)
     }
 }
